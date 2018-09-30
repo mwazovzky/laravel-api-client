@@ -15,10 +15,30 @@ export default {
         HelloWorld
     },
     created() {
-        axios.get('http://laravel-api-server.test/api/test')
-            .then(({ data }) => {
-                console.log(data)
+        const postData = {
+            grant_type: 'password',
+            client_id: 2,
+            client_secret: 'H46RgGdh9OPQALRJm48UPjnlIuhsbL0bfWlViJFU',
+            username: 'alex@example.com',
+            password: 'secret',
+            scope: '',
+        }
+
+        axios.post('http://laravel-api-server.test/oauth/token', postData)
+            .then(response => {
+                const accessToken = response.data.access_token
+
+                const headers = {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,    
+                }
+
+                axios.get('http://laravel-api-server.test/api/test', { headers })
+                    .then(({ data }) => {
+                        console.log(data)
+                    })
             })
+
     }
 }
 </script>
